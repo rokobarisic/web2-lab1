@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Popis propusnica</title>
+  <link rel="stylesheet" href="/passes.css" />
+</head>
+
+<body>
+  <main class="pass-container">
+    <h1>Popis propusnica</h1>
+    <% if (passes.length === 0) { %>
+    <p>Nema propusnica u bazi.</p>
+    <% } else { %>
+    <% passes.forEach(function (pass) { %>
+    <div class="pass-card">
+      <p><span>ID:</span> <strong><%= pass.id %></strong></p>
+      <p><span>Ime i prezime:</span> <strong><%= pass.name %></strong></p>
+      <p><span>Dokument:</span> <strong><%= pass.document %></strong></p>
+      <p><span>Izdano:</span> <strong><%= pass.issued_at.toLocaleString("hr-HR") %></strong></p>
+      <p><span>Status:</span> <strong><%= pass.status %></strong></p>
+
+      <div class="actions">
+        <% if (pass.status === "ACTIVE") { %>
+        <form method="POST" action="/restricted/passes/<%= pass.id %>/cancel">
+          <button type="submit">Poništi</button>
+        </form>
+        <% } %>
+        <form method="POST" action="/restricted/passes/<%= pass.id %>/delete">
+          <button type="submit">Obriši</button>
+        </form>
+      </div>
+    </div>
+    <% }); %>
+    <% } %>
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digitalne propusnice</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <main class="container">
+    <h1>Digitalne propusnice</h1>
+
+    <section class="stats">
+      <p>Ukupan broj propusnica: <strong><%= total %></strong></p>
+      <p>Broj aktivnih propusnica: <strong><%= active %></strong></p>
+    </section>
+
+    <section class="auth">
+      <% if (isAuthenticated) { %>
+      <p>Prijavljeni ste<%= user && user.name ? ' kao ' + user.name : '' %>.</p>
+      <p>
+        <a href="/restricted/passes">Pregled propusnica</a>
+        &nbsp;|&nbsp;
+        <a href="/logout">Odjava</a>
+      </p>
+      <% } else { %>
+      <p><a href="/login">Prijava</a></p>
+      <% } %>
+    </section>
+  </main>
+</body>
+
+</html>

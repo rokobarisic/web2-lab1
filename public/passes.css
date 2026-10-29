@@ -1,0 +1,10 @@
+  .pass-card {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    max-width: 400px;
+  }
+  .pass-card p { margin: 0.25rem 0; }
+  .pass-card span { color: #666; }    
+  .actions { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
