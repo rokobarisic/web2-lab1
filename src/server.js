@@ -1,6 +1,8 @@
 const path = require("path");
 const express = require("express");
 const { auth, requiresAuth } = require("express-openid-connect");
+const { auth: jwtAuth, requiredScopes } = require("express-oauth2-jwt-bearer");
+const QRCode = require("qrcode");
 const config = require("./config");
 const db = require("./db");
 
@@ -93,7 +95,81 @@ app.post(
   },
 );
 
+const checkJwt = jwtAuth({
+  issuerBaseURL: config.m2m.issuerBaseURL,
+  audience: config.m2m.audience,
+});
+
+app.get(
+  "/passes/:id",
+  checkJwt,
+  requiredScopes("read:passes"),
+  async (req, res, next) => {
+    try {
+      const pass = await db.getPass(req.params.id);
+      if (!pass) {
+        return res
+          .status(404)
+          .json({ error: "Tražena propusnica ne postoji!" });
+      }
+      res.json({
+        id: pass.id,
+        name: pass.name,
+        document: pass.document,
+        issuedAt: new Date(pass.issued_at)
+          .toISOString()
+          .replace(/\.\d{3}Z$/, "Z"),
+        status: pass.status,
+      });
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
+app.post(
+  "/passes",
+  checkJwt,
+  requiredScopes("create:passes"),
+  async (req, res, next) => {
+    try {
+      const name =
+        typeof req.body.name === "string" ? req.body.name.trim() : "";
+      const document =
+        typeof req.body.document === "string" ? req.body.document.trim() : "";
+
+      if (!name || !document) {
+        return res.status(400).json({
+          error:
+            "Nešto je pošlo po zlu. Provjeri jesi li ispravno dodao polja 'name' i 'document'.",
+        });
+      }
+
+      const pass = await db.createPass(name, document);
+
+      const url = `${config.baseUrl}/info/${pass.id}`;
+      const qr = await QRCode.toBuffer(url, { type: "png" });
+
+      res.status(201);
+      res.set("Location", `${config.baseUrl}/passes/${pass.id}`);
+      res.type("image/png");
+      res.send(qr);
+    } catch (err) {
+      next(err);
+    }
+  },
+);
+
 app.use((err, req, res, next) => {
+  const status = err.status || err.statusCode;
+  if (status) {
+    if (err.headers) {
+      res.set(err.headers);
+    }
+    return res.status(status).json({
+      error: err.message || "Greška autorizacije",
+    });
+  }
   console.error(err);
   res.status(500).send("Interna greška poslužitelja");
 });
