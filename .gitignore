@@ -23,3 +23,6 @@ Thumbs.db
 # Build / coverage
 dist/
 coverage/
+
+# QR kodovi
+*.png
