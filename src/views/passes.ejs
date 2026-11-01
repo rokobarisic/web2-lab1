@@ -9,8 +9,8 @@
 </head>
 
 <body>
+  <h1>Popis propusnica</h1>
   <main class="pass-container">
-    <h1>Popis propusnica</h1>
     <% if (passes.length === 0) { %>
     <p>Nema propusnica u bazi.</p>
     <% } else { %>
@@ -25,11 +25,11 @@
       <div class="actions">
         <% if (pass.status === "ACTIVE") { %>
         <form method="POST" action="/restricted/passes/<%= pass.id %>/cancel">
-          <button type="submit">Poništi</button>
+          <button type="submit">Poništi propusnicu</button>
         </form>
         <% } %>
         <form method="POST" action="/restricted/passes/<%= pass.id %>/delete">
-          <button type="submit">Obriši</button>
+          <button type="submit">Obriši propusnicu</button>
         </form>
       </div>
     </div>

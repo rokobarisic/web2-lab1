@@ -141,7 +141,7 @@ app.post(
       if (!name || !document) {
         return res.status(400).json({
           error:
-            "Nešto je pošlo po zlu. Provjeri jesi li ispravno dodao polja 'name' i 'document'.",
+            "Nešto je pošlo po zlu. Provjeri jesi li ispravno dodao polja 'name' i 'document'. Ne smiju biti prazna!",
         });
       }
 
