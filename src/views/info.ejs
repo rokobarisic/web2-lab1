@@ -15,7 +15,7 @@
     <section class="info">
       <p>Ime i prezime: <strong><%= name %></strong></p>
       <p>Dokument: <strong><%= document %></strong></p>
-      <p>Vrijeme izdavanja: <strong><%= issuedAt.toLocaleString("hr-HR") %></strong></p>
+      <p>Vrijeme izdavanja: <strong><%= issuedAt.toLocaleString("hr-HR", { timeZone: "Europe/Zagreb" }) %></strong></p>
       <p>Status: <strong><%= status %></strong></p>
     </section>
   </main>
